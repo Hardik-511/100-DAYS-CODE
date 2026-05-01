@@ -1,43 +1,47 @@
-/*Q25 (Conditional Statements)
-Write a program to implement a basic calculator using switch-case for +, -, *, /, %. */
-
 #include <stdio.h>
 
-int main(){
-    char op;
-    float num1, num2, result;
-    printf("Give calculator input (num1 num2 operator): \n");
-    scanf("%f %f %c", &num1, &num2, &op);
-    switch(op){
-        case '+':
-            result = num1 + num2;
-            printf("Result: %.2f \n", result);
-            break;
-        case '-':
-            result = num1 - num2;
-            printf("Result: %.2f \n", result);
-            break;
-        case '*':
-            result = num1 * num2;
-            printf("Result: %.2f \n", result);
-            break;
-        case '/':
-            if(num2 != 0){
-                result = num1 / num2;
-                printf("Result: %.2f \n", result);
-            } else {
-                printf("Error: Division by zero is not allowed.\n");
-            }
-            break;
-        case '%':
-            if((int)num2 != 0){
-                result = (int)num1 % (int)num2;
-                printf("Result: %f \n", result);
-            } else {
-                printf("Error: Division by zero is not allowed.\n");
-            }
-            break;
-        default:
-            printf("You can only use +, -, *, /, or %%.\n");
+int main() {
+    int r, c;
+
+    printf("Enter rows and columns: ");
+    scanf("%d %d", &r, &c);
+
+    int matrix[r][c];
+
+    printf("Enter matrix elements:\n");
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            scanf("%d", &matrix[i][j]);
+        }
     }
+
+    int top = 0, bottom = r - 1;
+    int left = 0, right = c - 1;
+
+    printf("Spiral order: ");
+
+    while (top <= bottom && left <= right) {
+
+        for (int i = left; i <= right; i++)
+            printf("%d ", matrix[top][i]);
+        top++;
+
+        for (int i = top; i <= bottom; i++)
+            printf("%d ", matrix[i][right]);
+        right--;
+
+        if (top <= bottom) {
+            for (int i = right; i >= left; i--)
+                printf("%d ", matrix[bottom][i]);
+            bottom--;
+        }
+
+        if (left <= right) {
+            for (int i = bottom; i >= top; i--)
+                printf("%d ", matrix[i][left]);
+            left++;
+        }
+    }
+
+    return 0;
 }

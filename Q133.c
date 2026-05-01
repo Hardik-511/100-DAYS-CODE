@@ -1,31 +1,54 @@
-/* Q133 (Enum)
-Create an enum for months and print how many days each month has. */
-
 #include <stdio.h>
+#include <stdlib.h>
 
-enum Months{
-  January, February, March, April, May, June, July, August, September, October, November, December
-};
+#define MAX 100
 
+int adj[MAX][MAX];
+int visited[MAX];
+int stack[MAX];
+int top = -1;
 
-int main(){
-  enum Months month;
-  for (month = January; month <= December; month++){
-    printf("%d: ", month + 1);
+void dfs(int v, int n) {
+    visited[v] = 1;
 
-    switch(month){
-      case January: printf("Jan - 31 Days\n"); break;
-      case February: printf("Feb - 28 or 29 Days\n"); break;
-      case March: printf("Mar - 31 Days\n"); break;
-      case April: printf("Apr - 30 Days\n"); break;
-      case May: printf("May - 31 Days\n"); break;
-      case June: printf("June - 30 Days\n"); break;
-      case July: printf("July - 31 Days\n"); break;
-      case August: printf("Aug - 31 Days\n"); break;
-      case September: printf("Sep - 30 Days\n"); break;
-      case October: printf("Oct - 31 Days\n"); break;
-      case November: printf("Nov - 30 Days\n"); break;
-      case December: printf("Dec - 31 Days\n"); break;
+    for (int i = 0; i < n; i++) {
+        if (adj[v][i] && !visited[i]) {
+            dfs(i, n);
+        }
     }
-  }
+
+    stack[++top] = v;
+}
+
+void topoSort(int n) {
+    for (int i = 0; i < n; i++) {
+        if (!visited[i]) {
+            dfs(i, n);
+        }
+    }
+
+    printf("Topological Order: ");
+    for (int i = top; i >= 0; i--) {
+        printf("%d ", stack[i]);
+    }
+}
+
+int main() {
+    int n, e, u, v;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter number of edges: ");
+    scanf("%d", &e);
+
+    printf("Enter edges (u v):\n");
+    for (int i = 0; i < e; i++) {
+        scanf("%d %d", &u, &v);
+        adj[u][v] = 1;
+    }
+
+    topoSort(n);
+
+    return 0;
 }

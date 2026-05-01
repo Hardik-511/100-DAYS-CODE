@@ -1,29 +1,51 @@
-/* Q41 (Loops without Arrays/Strings)
-Write a program to swap the first and last digit of a number. */
-
 #include <stdio.h>
-#include <math.h>
+#include <stdlib.h>
 
-int main(){
-    int number, noofdig=0, newnum, temp, lastdig, firstdig;
-    printf("Enter a num: ");
-    scanf("%d", &number);
-    temp = number;
-    
-    // Finding the Number of digits
-    while (number > 0){
-        number = number / 10; 
-        noofdig++;
-        }        
+struct Node
+{
+    int data;
+    struct Node *next;
+};
 
-    // First, Last and middle digits
-    lastdig = temp%10;
-    firstdig = (temp / pow(10,noofdig - 1));
-    
-    int middle = temp % (int)pow(10, noofdig - 1);
-    middle = middle / 10;
+int main()
+{
+    int n, value;
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
 
-    // Creating the new number
-    newnum = lastdig * pow(10, noofdig-1) + (middle*10) + firstdig;
-    printf("New number: %d", newnum);
+    struct Node *head = NULL, *temp = NULL, *newNode = NULL;
+
+    printf("Enter %d elements:\n", n);
+
+    for(int i = 0; i < n; i++)
+    {
+        scanf("%d", &value);
+
+        newNode = (struct Node*)malloc(sizeof(struct Node));
+        newNode->data = value;
+        newNode->next = NULL;
+
+        if(head == NULL)
+        {
+            head = newNode;
+            temp = newNode;
+        }
+        else
+        {
+            temp->next = newNode;
+            temp = newNode;
+        }
+    }
+
+    printf("Linked List elements are:\n");
+
+    temp = head;
+
+    while(temp != NULL)
+    {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+
+    return 0;
 }

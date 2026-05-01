@@ -1,30 +1,52 @@
-/*Q55 (Nested Loops without Arrays/Strings)
-Write a program to print all the prime numbers from 1 to n. */
-
 #include <stdio.h>
+#include <stdlib.h>
 
-int Prime(int n){
-    if (n <= 1) {
-        return 0;
-    }
-    int i=2;
-    while (i*i <=n){
-        if (n %i == 0){
-            return 0;
-        }
-        i++;
-    }
-        return 1;
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
 }
 
 int main() {
-    int num;
-    printf("Enter a number: ");
-    scanf("%d", &num);
-    printf("Prime numbers from 1 to %d are: ", num);
-    for (int i = 1; i <= num; i++) {
-        if (Prime(i)) {
-            printf("%d ", i);
+    int n, val;
+
+    scanf("%d", &n);
+
+    if (n <= 0)
+        return 0;
+
+    struct Node *head = NULL, *tail = NULL;
+
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &val);
+        struct Node* newNode = createNode(val);
+
+        if (head == NULL) {
+            head = tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
         }
     }
+
+    // Make it circular
+    tail->next = head;
+
+    // Traverse circular list
+    struct Node* temp = head;
+
+    if (head != NULL) {
+        do {
+            printf("%d ", temp->data);
+            temp = temp->next;
+        } while (temp != head);
+    }
+
+    return 0;
 }

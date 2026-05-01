@@ -1,46 +1,83 @@
-/* Q103 (Logic Enhancers)
-Write a Program to take an array of integers as input, calculate the pivot index of this array. The pivot index is the index where the sum of all the numbers strictly to the left of the index is equal to the sum of all the numbers strictly to the index's right. If the index is on the left edge of the array, then the left sum is 0 because there are no elements to the left. This also applies to the right edge of the array. Print the leftmost pivot index. If no such index exists, print -1. */
-
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(){
-  // Making the array
-    int len;
-    printf("Enter the length of array: \n");
-    scanf("%d", &len);
-    int nums[len];
-    for (int i = 0; i < len; i++){
-        printf("Enter element %d: \n", i+1);
-        scanf("%d", &nums[i]);
+struct Node {
+    int data;
+    struct Node *left, *right;
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+struct Node* buildTree(int arr[], int n) {
+    if (n == 0 || arr[0] == -1) return NULL;
+
+    struct Node* root = createNode(arr[0]);
+    struct Node* queue[1000];
+    int front = 0, rear = 0;
+
+    queue[rear++] = root;
+    int i = 1;
+
+    while (i < n) {
+        struct Node* current = queue[front++];
+
+        if (arr[i] != -1) {
+            current->left = createNode(arr[i]);
+            queue[rear++] = current->left;
+        }
+        i++;
+
+        if (i < n && arr[i] != -1) {
+            current->right = createNode(arr[i]);
+            queue[rear++] = current->right;
+        }
+        i++;
     }
 
-    printf("Your array is: \n");
-    for (int i = 0; i<len; i++){
-        printf("%d ", nums[i]);
-    }
-    printf("\n");
-  
-    // Finding the pivot
-    int sum = 0;
-    int Rsum,Lsum = 0,flag = 0,pivot = -1;
-    for (int i = 0; i < len; i++){
-      sum += nums[i];
-    }
+    return root;
+}
 
-    for (int i = 0; i < len; i++){
-      Rsum = sum - Lsum - nums[i];
-      if (Rsum == Lsum){
-        pivot = i;
-        flag = 1;
-        break;
-      }
-      Lsum += nums[i];
-    }
+struct Node* LCA(struct Node* root, int n1, int n2) {
+    if (root == NULL) return NULL;
 
-    if (flag == 1){
-      printf("The pivot element has index %d.", pivot);
-    }
-    else if (flag == 0){
-      printf("No Pivot exists. -1");
-    }
+    if (root->data == n1 || root->data == n2)
+        return root;
+
+    struct Node* left = LCA(root->left, n1, n2);
+    struct Node* right = LCA(root->right, n1, n2);
+
+    if (left && right) return root;
+
+    return (left != NULL) ? left : right;
+}
+
+int main() {
+    int n;
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    int arr[1000];
+    printf("Enter level order (-1 for NULL): ");
+    for (int i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+
+    int n1, n2;
+    printf("Enter two nodes: ");
+    scanf("%d %d", &n1, &n2);
+
+    struct Node* root = buildTree(arr, n);
+
+    struct Node* ans = LCA(root, n1, n2);
+
+    if (ans)
+        printf("LCA: %d\n", ans->data);
+    else
+        printf("LCA not found\n");
+
+    return 0;
 }

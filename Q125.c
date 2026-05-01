@@ -1,20 +1,48 @@
-/* Q125 (File Handling)
-Open an existing file in append mode and allow the user to enter a new line of text. Append the text at the end without overwriting existing content. */
-
 #include <stdio.h>
 
-int main(){
+int adj[100][100], visited[100];
+int n;
 
-  FILE *fptr;
-  fptr = fopen("text.txt", "a");
-  char str[500];
-  printf("Enter the sentence you want to append to text.txt: \n");
-  fgets(str, sizeof(str), stdin);
-  for (int i = 0; str[i] != '\0'; i++){
-    if (str[i] == '\n'){
-      str[i] = '\0';
+void dfs(int v) {
+    visited[v] = 1;
+    printf("%d ", v);
+
+    for (int i = 0; i < n; i++) {
+        if (adj[v][i] == 1 && visited[i] == 0) {
+            dfs(i);
+        }
     }
-  }
+}
 
-  fprintf(fptr, "%s", str);
+int main() {
+    int edges, u, v, start;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter number of edges: ");
+    scanf("%d", &edges);
+
+    for (int i = 0; i < n; i++) {
+        visited[i] = 0;
+        for (int j = 0; j < n; j++) {
+            adj[i][j] = 0;
+        }
+    }
+
+    printf("Enter edges (u v):\n");
+    for (int i = 0; i < edges; i++) {
+        printf("Edge %d: ", i + 1);
+        scanf("%d %d", &u, &v);
+        adj[u][v] = 1;
+        adj[v][u] = 1;
+    }
+
+    printf("Enter starting vertex: ");
+    scanf("%d", &start);
+
+    printf("DFS Traversal: ");
+    dfs(start);
+
+    return 0;
 }

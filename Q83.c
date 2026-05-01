@@ -1,24 +1,51 @@
-/*Q83 (Strings)
-Count vowels and consonants in a string. */
-
 #include <stdio.h>
 
+#define MAX 100
+
+int queue[MAX];
+int front = 0;
+int rear = -1;
+
+int stack[MAX];
+int top = -1;
+
+void enqueue(int x){
+    queue[++rear] = x;
+}
+
+int dequeue(){
+    return queue[front++];
+}
+
+void push(int x){
+    stack[++top] = x;
+}
+
+int pop(){
+    return stack[top--];
+}
+
+void reverseQueue(){
+
+    while(front <= rear)
+        push(dequeue());
+
+    front = 0;
+    rear = -1;
+
+    while(top != -1)
+        enqueue(pop());
+}
+
 int main(){
-    char str[100];
-    int i = 0;
-    printf("Enter any string: \n");
-    scanf("%s", str);
 
-    int vow = 0,con = 0;
-    while (str[i] != '\0'){
-        if (str[i] == 'a' || str[i]== 'e' || str[i] == 'i' || str[i] == 'o' || str[i] == 'u' || str[i] == 'A' || str[i]== 'E' || str[i] == 'I' || str[i] == 'O' || str[i] == 'U'){
-            vow+=1;
-        }
-        else{
-            con+=1;
-        }
-        i++;
-    }
+    enqueue(10);
+    enqueue(20);
+    enqueue(30);
 
-    printf("The number of vowels are: %d\nThe number of consonants are: %d", vow, con);
+    reverseQueue();
+
+    while(front <= rear)
+        printf("%d ", dequeue());
+
 }

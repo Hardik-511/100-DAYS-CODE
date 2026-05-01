@@ -1,33 +1,31 @@
-/*Q33 (Loops without Arrays/Strings)
-Write a program to check if a number is an Armstrong number. */
-
 #include <stdio.h>
-#include <math.h>
 
-int main(){
-    int number, numofdigits=0, sum=0, temp;
-    printf("Enter a number: ");
-    scanf("%d", &number); 
-    temp = number;
-    while (number > 0) {
-        number = number / 10;
-        numofdigits++;
-    }
-    
-    number = temp;
+int main() {
+    int n;
 
-    while (number > 0) {
-        int lastdig = number % 10;
-        sum += pow(lastdig, numofdigits);
-        number = number / 10;         
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    int arr[n];
+
+    printf("Enter %d integers: ", n);
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
     }
 
-    if (sum == temp){
-        printf("Armstrong number.");
+    int max = arr[0];
+    int min = arr[0];
+
+    for(int i = 1; i < n; i++) {
+        if(arr[i] > max)
+            max = arr[i];
+
+        if(arr[i] < min)
+            min = arr[i];
     }
-        else {
-        printf("Not an Armstrong number.");
-    }
+
+    printf("Max: %d\n", max);
+    printf("Min: %d", min);
 
     return 0;
 }

@@ -1,19 +1,31 @@
-/* Q6 (User Inputs, Operations & Output)
-Write a program to swap two numbers using a third variable.  */
-
 #include <stdio.h>
 
+int missingNum(int *arr, int size) {
+    long long n = size + 1;
+    long long expectedSum = n * (n+1) / 2;
+    long long actualSum = 0;
+    
+    for (int i = 0; i < size; i++){
+        actualSum += arr[i];
+    }
+    
+    return expectedSum - actualSum;
+    
+}
+
 int main(){
-    int num1, num2, tempnum;
-    printf("Enter first number: ");
-    scanf("%d", &num1);
-    printf("Enter second number: ");
-    scanf("%d", &num2);
+    int n;
+    printf("Enter total numbers: \n");
+    scanf("%d", &n);
 
-    tempnum = num1;
-    num1 = num2;
-    num2 = tempnum;
+    int arr[n - 1];
 
-    printf("After Swapping:\n num1 = %d\n num2 = %d\n", num1, num2);
-    return 0;
+    printf("Enter array elements: \n");
+    for (int i = 0; i < n - 1; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    int missing = missingNum(arr, n - 1);
+
+    printf("Missing Number: %d", missing);
 }

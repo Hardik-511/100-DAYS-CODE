@@ -1,36 +1,79 @@
-/* Q123 (File Handling)
-Read a text file and count the total number of characters, words, and lines. A word is defined as a sequence of non-space characters separated by spaces or newlines. */
-
 #include <stdio.h>
-#include <ctype.h>
+#include <stdlib.h>
 
-int main(){
-  FILE *fptr;
-  fptr = fopen("sample.txt", "r");
-  char str[500];
-  int numofchar = 0, numofwords = 0, numoflines = 1;
-  while (fgets(str, sizeof(str), fptr) != NULL){
-    for (int i = 0; str[i] != '\0'; i++){
-    
-    char ch = str[i];
-    
-    if (ch != '\n'){
-      numofchar++;
-    }
-    
+struct Node {
+    int vertex;
+    struct Node* next;
+};
 
-    if (ch == '\n'){
-      numoflines++;
-    }
-    
-    if (!isspace(ch) && (isspace(str[i+1]) || str[i+1] == '\0')){
-      numofwords++;
-    }
-    }
-  }
+struct Graph {
+    int numVertices;
+    struct Node** adjLists;
+};
 
-  printf("Number of characters: %d\n", numofchar);
-  printf("Number of words: %d\n", numofwords);
-  printf("Number of lines: %d\n", numoflines);
-  fclose(fptr);
+struct Node* createNode(int v) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->vertex = v;
+    newNode->next = NULL;
+    return newNode;
+}
+
+struct Graph* createGraph(int vertices) {
+    struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
+    graph->numVertices = vertices;
+
+    graph->adjLists = (struct Node**)malloc(vertices * sizeof(struct Node*));
+
+    for (int i = 0; i < vertices; i++)
+        graph->adjLists[i] = NULL;
+
+    return graph;
+}
+
+void addEdge(struct Graph* graph, int src, int dest) {
+    struct Node* newNode = createNode(dest);
+    newNode->next = graph->adjLists[src];
+    graph->adjLists[src] = newNode;
+
+    newNode = createNode(src);
+    newNode->next = graph->adjLists[dest];
+    graph->adjLists[dest] = newNode;
+}
+
+void printGraph(struct Graph* graph) {
+    for (int v = 0; v < graph->numVertices; v++) {
+        struct Node* temp = graph->adjLists[v];
+        printf("Vertex %d: ", v);
+
+        while (temp) {
+            printf("%d -> ", temp->vertex);
+            temp = temp->next;
+        }
+        printf("NULL\n");
+    }
+}
+
+int main() {
+    int n, m;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter number of edges: ");
+    scanf("%d", &m);
+
+    struct Graph* graph = createGraph(n);
+
+    printf("Enter edges (u v):\n");
+    for (int i = 0; i < m; i++) {
+        printf("Edge %d: ", i + 1);
+        int u, v;
+        scanf("%d %d", &u, &v);
+        addEdge(graph, u, v);
+    }
+
+    printf("\nAdjacency List:\n");
+    printGraph(graph);
+
+    return 0;
 }

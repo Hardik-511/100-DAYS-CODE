@@ -1,44 +1,61 @@
-/* Q93 (Strings)
-Check if two strings are anagrams of each other. */
-
 #include <stdio.h>
-#include <ctype.h>
-#include <string.h>
+#include <stdlib.h>
 
-int main(){
-    char str1[100], str2[100];
-    int len1,len2, frequency[26]= {0};
-    printf("Enter string 1: \n");
-    fgets(str1,sizeof(str1),stdin);
-    len1 = strlen(str1);
-    printf("Enter string 2: \n");
-    fgets(str2,sizeof(str2),stdin);
-    len2 = strlen(str2);
-    
-    if (len1 != len2){
-        printf("The strings are not anagram.");
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+int height(struct Node* root) {
+    if (root == NULL)
         return 0;
-    }
 
-    for (int i = 0; str1[i]; i++){
-        if (isalpha(str1[i])){
-            frequency[tolower(str1[i]) - 'a']++;
-        }
-    }
+    int leftHeight = height(root->left);
+    int rightHeight = height(root->right);
 
-    for (int j = 0; str2[j]; j++){
-        if (isalpha(str2[j])){
-            frequency[tolower(str2[j]) - 'a']--;
-        }
-    }
+    if (leftHeight > rightHeight)
+        return 1 + leftHeight;
+    else
+        return 1 + rightHeight;
+}
 
-    for (int k = 0; k < 26; k++){
-        if (frequency[k] != 0){
-            printf("The strings are not anagrams.");
-            return 0;
-        }
-    }
+struct Node* buildTree() {
+    int val;
+    printf("Enter node value (-1 for NULL): ");
+    scanf("%d", &val);
 
-    printf("The strings are anagrams.");
+    if (val == -1)
+        return NULL;
+
+    struct Node* root = createNode(val);
+
+    printf("Entering left child of %d\n", val);
+    root->left = buildTree();
+
+    printf("Entering right child of %d\n", val);
+    root->right = buildTree();
+
+    return root;
+}
+
+int main() {
+    struct Node* root;
+
+    printf("Build Binary Tree\n");
+    root = buildTree();
+
+    int h = height(root);
+
+    printf("Height of Binary Tree = %d\n", h);
+
     return 0;
 }

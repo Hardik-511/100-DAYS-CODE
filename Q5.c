@@ -1,13 +1,37 @@
-/* Q5 (User Inputs, Operations & Output)
-Write a program to convert temperature from Celsius to Fahrenheit. */
-
 #include <stdio.h>
-int main() {
-    float celsius, fahrenheit;
-    printf("Enter temperature in Degree Celsius: ");
-    scanf("%f", &celsius);
-    fahrenheit = (celsius * 9/5) + 32;
-    printf("Temperature in Fahrenheit: %.2f Degree F\n", fahrenheit);
-    return 0;
-}
 
+int main(){
+    int n, k;
+    int comp = 0;
+    int found = -1;
+
+    printf("Enter array size: \n");
+    scanf("%d", &n);
+
+    int arr[n];
+
+    printf("Enter array elements: \n");
+    for (int i = 0; i < n; i++){
+        scanf("%d", &arr[i]);
+    }
+
+    printf("Enter key: \n");
+    scanf("%d", &k);
+
+    for (int i = 0; i < n; i++){
+        comp++;
+        if (arr[i] == k){
+            found = i;
+            break;
+        }
+    }
+
+    if (found != -1){
+        printf("Found at index %d.\n", found);
+    }
+    else{
+        printf("Not found.\n");
+    }
+
+    printf("Comparisons: %d\n", comp);
+}

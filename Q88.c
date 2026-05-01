@@ -1,21 +1,37 @@
-/*Q88 (Strings)
-Replace spaces with hyphens in a string. */
-
 #include <stdio.h>
-#include <ctype.h>
+#include <stdlib.h>
+
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+};
+
+struct TreeNode* createNode(int val){
+    struct TreeNode* node = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    node->val = val;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+void preorder(struct TreeNode* root){
+    if(root == NULL)
+        return;
+
+    printf("%d ", root->val);
+    preorder(root->left);
+    preorder(root->right);
+}
 
 int main(){
-    
-    char str[100];
-    int i = 0;
-    printf("Enter any string: \n");
-    fgets(str,sizeof(str),stdin);
 
-    while (str[i] != '\0'){
-        if (str[i] == ' '){
-            str[i] = '-';
-        }
-    i++;
-    }
-    printf("%s", str);
+    struct TreeNode* root = createNode(1);
+    root->right = createNode(2);
+    root->right->left = createNode(3);
+
+    printf("Preorder Traversal: ");
+    preorder(root);
+
+    return 0;
 }

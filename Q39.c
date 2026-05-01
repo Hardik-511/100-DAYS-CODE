@@ -1,26 +1,29 @@
-/* Q39 (Loops without Arrays/Strings)
-Write a program to find the product of odd digits of a number. */
-
 #include <stdio.h>
 
-int main(){
-    int number, oddnums=1;
-    printf("Enter an integer: ");
-    scanf("%d", &number);
-    while (number >= 1){
-         if (number == 1){
-            printf("No odd digits found.");
-            return 0;
-        }
-        else if (number % 2 == 0) {
-            number = number / 10;
-        }
-        else if (number % 2 != 0) {
-            oddnums = oddnums * (number % 10);
-            number = number / 10;
-        }
-       
+int main() {
+    int n;
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    int arr[n];
+    printf("Enter the elements:\n");
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
     }
-    printf("Product of odd digits: %d", oddnums);
+
+    int count = 0;
+
+    for(int i = 0; i < n; i++) {
+        int sum = 0;
+        for(int j = i; j < n; j++) {
+            sum += arr[j];
+            if(sum == 0) {
+                count++;
+            }
+        }
+    }
+
+    printf("Number of subarrays with sum zero: %d", count);
+
     return 0;
 }

@@ -1,19 +1,29 @@
-/* Q7 (User Inputs, Operations & Output)
-Write a program to swap two numbers without using a third variable. */
-
 #include <stdio.h>
 
 int main(){
-    int num1, num2;
-    printf("Enter first number: ");
-    scanf("%d", &num1); 
-    printf("Enter second number: "); 
-    scanf("%d", &num2);
+    int n;
+    printf("Enter length of array: \n");
+    scanf("%d", &n);
 
-    num1 = num1 + num2;
-    num2 = num1 - num2;
-    num1 = num1 - num2;
+    int arr[n];
+    
+    printf("Enter array elements: \n");
+    for (int i = 0; i < n; i++){
+        scanf("%d", &arr[i]);
+    }
 
-    printf("After Swapping:\n num1 = %d\n num2 = %d\n", num1, num2);
-    return 0;
+    int left = 0, right = n - 1;
+    while (left < right){
+        int temp = arr[left];
+        arr[left] = arr[right];
+        arr[right] = temp;
+        left++;
+        right--;
+    }
+
+    
+    for (int i = 0; i < n; i++){
+        printf("%d ", arr[i]);
+    }
+
 }

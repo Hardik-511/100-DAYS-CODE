@@ -1,36 +1,80 @@
-/* Q109 (Logic Enhancers)
-Write a program to take an integer array arr and an integer k as inputs. Print the maximum sum of all the subarrays of size k. */
-
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(){
-  int len, k;
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
 
-  printf("Enter the length of array: \n");
-  scanf("%d", &len);
-  int nums[len];
-  for (int i = 0; i < len; i++){
-    printf("Enter element %d: \n", i+1);
-    scanf("%d", &nums[i]);
-  }
-  printf("Enter the size of sub arrays you want: \n");
-  scanf("%d", &k);
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
 
-  int sum;
-  int maxsum = 0;
-  for (int i = 0; i < k; i++){
-    maxsum += nums[i];
-  }
+struct Node* buildTree(int arr[], int n) {
+    if (n == 0) return NULL;
 
-  for (int i = 0; i <= len-k; i++){
-    int currsum = 0;
-    for (int j = i; j < i + k; j++){
-      currsum += nums[j];
+    struct Node* nodes[n];
+
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == -1)
+            nodes[i] = NULL;
+        else
+            nodes[i] = createNode(arr[i]);
     }
-  if (currsum > maxsum){
-    maxsum = currsum;
-  }
-  } 
 
-  printf("Maximum sum of all sub arrays of size %d : %d",k, maxsum);
+    for (int i = 0, j = 1; j < n; i++) {
+        if (nodes[i] != NULL) {
+            if (j < n) nodes[i]->left = nodes[j++];
+            if (j < n) nodes[i]->right = nodes[j++];
+        }
+    }
+
+    return nodes[0];
+}
+
+void rightView(struct Node* root) {
+    if (!root) return;
+
+    struct Node* queue[100];
+    int front = 0, rear = 0;
+
+    queue[rear++] = root;
+
+    while (front < rear) {
+        int size = rear - front;
+
+        for (int i = 0; i < size; i++) {
+            struct Node* curr = queue[front++];
+
+            if (i == size - 1)
+                printf("%d ", curr->data);
+
+            if (curr->left) queue[rear++] = curr->left;
+            if (curr->right) queue[rear++] = curr->right;
+        }
+    }
+}
+
+int main() {
+    int n;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    int arr[n];
+
+    printf("Enter level order traversal (-1 for NULL):\n");
+    for (int i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+
+    struct Node* root = buildTree(arr, n);
+
+    printf("Right View: ");
+    rightView(root);
+
+    return 0;
 }

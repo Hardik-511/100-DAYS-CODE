@@ -1,16 +1,34 @@
-/* Q12 (Conditional Statements)
-Write a program to input an integer and check whether it is positive, negative or zero using nested if–else.  */
-
 #include <stdio.h>
-int main(){
-    int num;
-    printf("Enter an integer: ");
-    scanf("%d", &num);
-    if (num > 0){
-        printf("%d is positive.\n", num);
-    } else if (num < 0){
-        printf("%d is negative.\n", num);
-    } else {
-        printf("The number is zero.\n");
+
+int main() {
+    int n;
+    printf("Enter array size:\n");
+    scanf("%d", &n);
+
+    int nums[n];
+    printf("Enter array elements:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &nums[i]);
     }
+
+    int k = 0;  
+
+
+    for (int i = 0; i < n; i++) {
+        if (nums[i] != 0) {
+            nums[k] = nums[i];
+            k++;
+        }
+    }
+
+    for (int i = k; i < n; i++) {
+        nums[i] = 0;
+    }
+
+    printf("Array after moving zeroes:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", nums[i]);
+    }
+
+    return 0;
 }

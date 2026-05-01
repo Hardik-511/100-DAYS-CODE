@@ -1,40 +1,76 @@
-/* Q115 (Logic Enhancers)
-Write a program to take two strings s and t as inputs (assume all characters are lowercase). The task is to determine if s and t are valid anagrams, meaning they contain the same characters with the same frequencies. Print "Anagram" if they are, otherwise "Not Anagram". */
-
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 
-int main(){
-  char str1[100], str2[100];
-  int count1[26] = {0};
-  int count2[26] = {0};
+typedef struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+} Node;
 
-  printf("Enter string 1: \n");
-  fgets(str1, sizeof(str1), stdin);
-  printf("Enter string 2: \n");
-  fgets(str2, sizeof(str2), stdin);
+Node* createNode(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
 
-  for (int i = 0; i < strlen(str1); i++){
-    int index = str1[i] - 'a';
-    count1[index]++;
-  }
-
-  for (int i = 0; i < strlen(str2); i++){
-    int index = str2[i] - 'a';
-    count2[index]++;
-  }
-
-  int flag = 1;
-  for (int i = 0; i < 26; i++){
-    if (count1[i] != count2[i]){
-      flag = 0;
+int search(int inorder[], int start, int end, int value) {
+    for (int i = start; i <= end; i++) {
+        if (inorder[i] == value)
+            return i;
     }
-  }
+    return -1;
+}
 
-  if (flag != 0){
-    printf("Anagram.");
-  }
-  else{
-    printf("Not Anagram.");
-  }
+Node* build(int preorder[], int inorder[], int start, int end, int* preIndex) {
+    if (start > end)
+        return NULL;
+
+    Node* root = createNode(preorder[*preIndex]);
+    (*preIndex)++;
+
+    if (start == end)
+        return root;
+
+    int inIndex = search(inorder, start, end, root->data);
+
+    root->left = build(preorder, inorder, start, inIndex - 1, preIndex);
+    root->right = build(preorder, inorder, inIndex + 1, end, preIndex);
+
+    return root;
+}
+
+void postorder(Node* root) {
+    if (root == NULL)
+        return;
+    postorder(root->left);
+    postorder(root->right);
+    printf("%d ", root->data);
+}
+
+int main() {
+    int n;
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    int preorder[1000], inorder[1000];
+
+    printf("Enter preorder traversal: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &preorder[i]);
+    }
+
+    printf("Enter inorder traversal: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &inorder[i]);
+    }
+
+    int preIndex = 0;
+
+    Node* root = build(preorder, inorder, 0, n - 1, &preIndex);
+
+    printf("Postorder traversal: ");
+    postorder(root);
+
+    return 0;
 }

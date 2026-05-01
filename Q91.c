@@ -1,23 +1,79 @@
-/* Q91 (Strings)
-Remove all vowels from a string. */
-
 #include <stdio.h>
-#include <ctype.h>
+#include <stdlib.h>
 
-int main(){
-    char str[100];
-    int i = 0, j = 0;
-    printf("Enter any string: \n");
-    fgets(str,sizeof(str),stdin);
-    
-    while (str[i] != '\0'){
-        if (!(tolower(str[i]) == 'a' || tolower(str[i]) == 'e' || tolower(str[i]) == 'i' || tolower(str[i]) == 'o' || tolower(str[i]) == 'u')){
-            str[j] = str[i];
-            j++;
-        }
-        i++;
-        
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+struct Node* queue[100];
+int front = -1, rear = -1;
+
+void enqueue(struct Node* node) {
+    if (front == -1) front = 0;
+    queue[++rear] = node;
+}
+
+struct Node* dequeue() {
+    return queue[front++];
+}
+
+void levelOrder(struct Node* root) {
+    if (root == NULL) return;
+
+    enqueue(root);
+
+    while (front <= rear) {
+        struct Node* temp = dequeue();
+        printf("%d ", temp->data);
+
+        if (temp->left != NULL)
+            enqueue(temp->left);
+
+        if (temp->right != NULL)
+            enqueue(temp->right);
     }
-    str[j] = '\0';
-    printf("%s", str);
+}
+
+int main() {
+    int n, val;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    if (n == 0) return 0;
+
+    struct Node* nodes[100];
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter value of node %d: ", i + 1);
+        scanf("%d", &val);
+        nodes[i] = createNode(val);
+    }
+
+    for (int i = 0; i < n; i++) {
+        int left, right;
+        printf("Enter left and right child index of node %d (-1 for NULL): ", i);
+        scanf("%d %d", &left, &right);
+
+        if (left != -1)
+            nodes[i]->left = nodes[left];
+
+        if (right != -1)
+            nodes[i]->right = nodes[right];
+    }
+
+    printf("Level Order Traversal:\n");
+    levelOrder(nodes[0]);
+
+    return 0;
 }

@@ -1,45 +1,68 @@
-/* Q137 (Enum)
-Create an enum for user roles (ADMIN, USER, GUEST) and display messages based on role. */
-
-/* Q134 (Enum)
-Define an enum with SUCCESS, FAILURE, and TIMEOUT, and print messages accordingly. */
-
 #include <stdio.h>
-#include <ctype.h>
-#include <string.h>
+#include <stdlib.h>
+#include <limits.h>
 
-enum Operation{
- GUEST, USER, ADMIN
-};
+#define MAX 100
 
+int V;
 
-int main(){
-  enum Operation O;
-  char rank[50];
-  printf("Enter your rank:  \n");
-  scanf("%s", rank);
+int minDistance(int dist[], int visited[]) {
+    int min = INT_MAX, min_index = -1;
+    for (int i = 0; i < V; i++) {
+        if (!visited[i] && dist[i] <= min) {
+            min = dist[i];
+            min_index = i;
+        }
+    }
+    return min_index;
+}
 
-  for (int i = 0; rank[i] != '\0'; i++){
-    rank[i] = toupper(rank[i]);
-  }
+void dijkstra(int graph[MAX][MAX], int src) {
+    int dist[MAX], visited[MAX];
 
-  if (strcmp(rank, "GUEST") == 0){
-    O = GUEST;
-  }
-  else if (strcmp(rank, "USER") == 0){
-    O = USER;
-  }
-  else if (strcmp(rank, "ADMIN") == 0){
-    O = ADMIN;
-  }
-  else{
-    printf("Invalid Input.");
+    for (int i = 0; i < V; i++) {
+        dist[i] = INT_MAX;
+        visited[i] = 0;
+    }
+
+    dist[src] = 0;
+
+    for (int count = 0; count < V - 1; count++) {
+        int u = minDistance(dist, visited);
+        visited[u] = 1;
+
+        for (int v = 0; v < V; v++) {
+            if (!visited[v] && graph[u][v] && dist[u] != INT_MAX &&
+                dist[u] + graph[u][v] < dist[v]) {
+                dist[v] = dist[u] + graph[u][v];
+            }
+        }
+    }
+
+    printf("Shortest distances from source:\n");
+    for (int i = 0; i < V; i++) {
+        printf("To %d = %d\n", i, dist[i]);
+    }
+}
+
+int main() {
+    int graph[MAX][MAX];
+    int src;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &V);
+
+    printf("Enter adjacency matrix:\n");
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    printf("Enter source vertex: ");
+    scanf("%d", &src);
+
+    dijkstra(graph, src);
+
     return 0;
-  }
-  
-  switch(O){
-    case GUEST: printf("Welcome Guest!"); break;
-    case USER: printf("Welcome User!"); break;
-    case ADMIN: printf("Welcome Admin!"); break;
-  }
 }

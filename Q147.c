@@ -1,41 +1,65 @@
-/* Q147 (Enum)
-Store employee data in a binary file using fwrite() and read using fread(). */
-
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
-struct EmpDetails{
-  char name[50];
-  int ID;
-  float sal;
-};
+#define MAX 1000
+#define NAME_LEN 50
 
-int main(){
-  FILE *fptr;
-  struct EmpDetails emp, reading;
-  printf("Enter employee name: \n");
-  fgets(emp.name, sizeof(emp.name), stdin);
-  for (int i = 0; emp.name[i] != '\0'; i++){
-    if (emp.name[i] == '\n'){
-      emp.name[i] = '\0';
+typedef struct {
+    char name[NAME_LEN];
+    int count;
+} Candidate;
+
+int findCandidate(Candidate arr[], int size, char *name) {
+    for (int i = 0; i < size; i++) {
+        if (strcmp(arr[i].name, name) == 0)
+            return i;
     }
-  }
+    return -1;
+}
 
-  printf("Enter employee ID: \n");
-  scanf("%d", &emp.ID);
+int main() {
+    int n;
+    printf("Enter number of votes: ");
+    scanf("%d", &n);
 
-  printf("Enter employee Salary: \n");
-  scanf("%f", &emp.sal);
+    Candidate candidates[MAX];
+    int size = 0;
 
-  fptr = fopen("employee.dat", "wb");
-  fwrite(&emp, sizeof(struct EmpDetails),1,fptr);
-  fclose(fptr);
-  getchar();
+    char name[NAME_LEN];
 
-  fptr = fopen("employee.dat", "rb");
-  fread(&reading, sizeof(reading),1, fptr);
-  fclose(fptr);
+    printf("Enter candidate names:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%s", name);
 
-  printf("Employee Details: \n");
-  printf("Name: %s || ID: %d || Salary: %.2f\n", reading.name, reading.ID, reading.sal);
+        int idx = findCandidate(candidates, size, name);
 
+        if (idx == -1) {
+            strcpy(candidates[size].name, name);
+            candidates[size].count = 1;
+            size++;
+        } else {
+            candidates[idx].count++;
+        }
+    }
+
+    char winner[NAME_LEN];
+    int maxVotes = 0;
+
+    for (int i = 0; i < size; i++) {
+        if (candidates[i].count > maxVotes) {
+            maxVotes = candidates[i].count;
+            strcpy(winner, candidates[i].name);
+        } 
+        else if (candidates[i].count == maxVotes) {
+            if (strcmp(candidates[i].name, winner) < 0) {
+                strcpy(winner, candidates[i].name);
+            }
+        }
+    }
+
+    printf("Winner: %s\n", winner);
+    printf("Votes: %d\n", maxVotes);
+
+    return 0;
 }

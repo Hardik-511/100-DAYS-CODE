@@ -1,30 +1,79 @@
-/* Q111 (Logic Enhancers)
-Write a program to take an integer array arr and an integer k as inputs. The task is to find the first negative integer in each subarray of size k moving from left to right. If no negative exists in a window, print "0" for that window. Print the results separated by spaces as output. */
-
 #include <stdio.h>
- 
-int main(){
-  int len, k;
+#include <stdlib.h>
 
-  printf("Enter the length of array: \n");
-  scanf("%d", &len);
-  int nums[len];
-  for (int i = 0; i < len; i++){
-    printf("Enter element %d: \n", i+1);
-    scanf("%d", &nums[i]);
-  }
-  printf("Enter the size of sub arrays you want: \n");
-  scanf("%d", &k);
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
 
-  for (int i = 0; i <= len-k; i++){
-    int firstneg = 0;
-    for (int j = i; j < i + k; j++){
-        if (nums[j] < 0){
-          firstneg = nums[j];
-          break;
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+struct Node* buildTree(int arr[], int n) {
+    if (n == 0 || arr[0] == -1) return NULL;
+
+    struct Node* root = createNode(arr[0]);
+    struct Node* queue[n];
+    int front = 0, rear = 0;
+
+    queue[rear++] = root;
+    int i = 1;
+
+    while (i < n) {
+        struct Node* current = queue[front++];
+
+        if (arr[i] != -1) {
+            current->left = createNode(arr[i]);
+            queue[rear++] = current->left;
         }
-      }
-      printf("%d ", firstneg);
+        i++;
+
+        if (i < n && arr[i] != -1) {
+            current->right = createNode(arr[i]);
+            queue[rear++] = current->right;
+        }
+        i++;
     }
 
+    return root;
+}
+
+int isMirror(struct Node* t1, struct Node* t2) {
+    if (t1 == NULL && t2 == NULL) return 1;
+    if (t1 == NULL || t2 == NULL) return 0;
+
+    return (t1->data == t2->data) &&
+           isMirror(t1->left, t2->right) &&
+           isMirror(t1->right, t2->left);
+}
+
+int isSymmetric(struct Node* root) {
+    return isMirror(root, root);
+}
+
+int main() {
+    int n;
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    int arr[n];
+    printf("Enter level order traversal (-1 for NULL): ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    struct Node* root = buildTree(arr, n);
+
+    if (isSymmetric(root))
+        printf("YES\n");
+    else
+        printf("NO\n");
+
+    return 0;
 }

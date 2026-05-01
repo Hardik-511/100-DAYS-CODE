@@ -1,48 +1,70 @@
-/* Q117 (Logic Enhancers)
-Write a program to take two sorted arrays of size m and n as input. Merge both the arrays such that the merged array is also sorted. Print the merged array. */
-
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(){
-  int len1, len2;
+typedef struct Node {
+    int val;
+    struct Node* left;
+    struct Node* right;
+} Node;
 
-  printf("Enter the length of array 1: \n");
-  scanf("%d", &len1); 
-  int nums1[len1];
-  for (int i = 0; i < len1; i++){
-    printf("Enter element %d: \n", i+1);
-    scanf("%d", &nums1[i]);
-  }
+Node* createNode(int val) {
+    Node* node = (Node*)malloc(sizeof(Node));
+    node->val = val;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
 
-  printf("Enter the length of array 2: \n");
-  scanf("%d", &len2); 
-  int nums2[len2];
-  for (int i = 0; i < len2; i++){
-    printf("Enter element %d: \n", i+1);
-    scanf("%d", &nums2[i]);
-  }
-
-  int merg[len1 + len2];
-  
-  for (int i = 0; i < len1; i++){
-    merg[i] = nums1[i];
-  }
-  for (int i = 0; i < len2; i++){
-    merg[len1 + i] = nums2[i];
-  }
-
-  for (int i = 0; i < len1 + len2; i++){
-    for (int j = 0; j < len1 + len2 - i - 1; j++){
-      if (merg[j] > merg[j+1]){
-        int temp = merg[j];
-        merg[j] = merg[j+1];
-        merg[j+1] = temp;
-      }
+int findIndex(int inorder[], int start, int end, int val) {
+    for(int i = start; i <= end; i++) {
+        if(inorder[i] == val) return i;
     }
-  }
+    return -1;
+}
 
-  printf("Merged and sorted array: \n");
-  for (int i = 0; i < len1 + len2; i++){
-    printf("%d ", merg[i]);
-  }
+Node* build(int inorder[], int postorder[], int inStart, int inEnd, int* postIndex) {
+    if(inStart > inEnd) return NULL;
+
+    int val = postorder[*postIndex];
+    (*postIndex)--;
+
+    Node* root = createNode(val);
+
+    int idx = findIndex(inorder, inStart, inEnd, val);
+
+    root->right = build(inorder, postorder, idx + 1, inEnd, postIndex);
+    root->left = build(inorder, postorder, inStart, idx - 1, postIndex);
+
+    return root;
+}
+
+void preorder(Node* root) {
+    if(root == NULL) return;
+    printf("%d ", root->val);
+    preorder(root->left);
+    preorder(root->right);
+}
+
+int main() {
+    int n;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    int inorder[n], postorder[n];
+
+    printf("Enter inorder traversal: ");
+    for(int i = 0; i < n; i++) scanf("%d", &inorder[i]);
+
+    printf("Enter postorder traversal: ");
+    for(int i = 0; i < n; i++) scanf("%d", &postorder[i]);
+
+    int postIndex = n - 1;
+
+    Node* root = build(inorder, postorder, 0, n - 1, &postIndex);
+
+    printf("Preorder traversal: ");
+    preorder(root);
+
+    return 0;
 }

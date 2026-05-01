@@ -1,14 +1,33 @@
-/* Q11 (Conditional Statements)
-Write a program to input an integer and check whether it is even or odd using if–else. */
-
 #include <stdio.h>
-int main(){
-    int num;
-    printf("Enter an integer: ");
-    scanf("%d", &num);
-    if(num % 2 == 0){
-        printf("%d is even.\n", num);
-    } else {
-        printf("%d is odd.\n", num);
+
+int main() {
+    int n;
+    printf("Enter length of array: \n");
+    scanf("%d", &n);
+
+    int arr[n];
+    printf("Enter array elements: \n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
     }
+
+    if (n == 0) {
+        return 0;
+    }
+
+    int i = 0; 
+
+    for (int j = 1; j < n; j++) {
+        if (arr[j] != arr[i]) {
+            i++;
+            arr[i] = arr[j];
+        }
+    }
+
+    printf("Unique Elements: \n");
+    for (int k = 0; k <= i; k++) {
+        printf("%d ", arr[k]);
+    }
+
+    return 0;
 }

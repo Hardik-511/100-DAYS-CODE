@@ -1,35 +1,53 @@
-/* Q37 (Loops without Arrays/Strings)
-Write a program to find the LCM of two numbers. */
-
 #include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
 
-int main(){
+int compare(const void *a, const void *b) {
+    return (*(int*)a - *(int*)b);
+}
 
-    // STEP 1 : FINDING THE HCF
-    int number1,number2, i=1, hcf=1, smallernum, biggernum;
-    printf("Enter two numbers: \n");
-    scanf("%d %d", &number1, &number2);
-    if (number1<number2){
-        smallernum=number1;
-        biggernum=number2;
+int main() {
+    int n;
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    if(n < 2) {
+        printf("At least two elements required\n");
+        return 0;
     }
-    else {
-        smallernum=number2;
-        biggernum=number1;
+
+    int arr[n];
+
+    printf("Enter elements:\n");
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
     }
 
-    while (smallernum >= i){
-        if (smallernum % i == 0 && biggernum % i == 0){
-            hcf = i;
+    qsort(arr, n, sizeof(int), compare);
+
+    int left = 0;
+    int right = n - 1;
+
+    int minSum = INT_MAX;
+    int first = arr[left], second = arr[right];
+
+    while(left < right) {
+
+        int sum = arr[left] + arr[right];
+
+        if(abs(sum) < abs(minSum)) {
+            minSum = sum;
+            first = arr[left];
+            second = arr[right];
         }
-        i++;
+
+        if(sum < 0)
+            left++;
+        else
+            right--;
     }
 
+    printf("Pair closest to zero: %d %d\n", first, second);
 
-    // STEP 2 : FINDING THE LCM
-    int lcm;
-    lcm = (number1 * number2) / hcf;
-    printf("\nThe LCM is %d", lcm);
     return 0;
-
 }

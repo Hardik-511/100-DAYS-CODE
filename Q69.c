@@ -1,33 +1,27 @@
-/* Q69 (Arrays (1D))
-Find the second largest element in an array. */
-
 #include <stdio.h>
 
-int main(){
+#define MAX 100
 
-    // Making the array
-    int len;
-    printf("Enter the length of array: \n");
-    scanf("%d", &len);
-    int arr[len];
-    printf("Enter %d elements:\n", len);
-    for (int i = 0; i < len; i++) {
-        scanf("%d", &arr[i]);
+int main()
+{
+    int queue[MAX];
+    int front = 0, rear = -1;
+    int n;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    printf("Enter elements:\n");
+    for(int i = 0; i < n; i++)
+    {
+        scanf("%d", &queue[++rear]);
     }
 
-    int max = arr[0], secondmax = arr[0];
-    // Finding the largest element
-    for (int i = 0; i<len; i++){
-        if (arr[i] > max){
-            max = arr[i];
-        }
-        
-    // Second largest element
-    for (int i=0; i<len;i++){
-        if (arr[i] > secondmax && arr[i] < max){
-            secondmax = arr[i];
-            }
-        }    
+    printf("Queue elements are: ");
+    for(int i = front; i <= rear; i++)
+    {
+        printf("%d ", queue[i]);
     }
-    printf("The second largest element is: %d", secondmax);
+
+    return 0;
 }

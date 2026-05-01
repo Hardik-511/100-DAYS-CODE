@@ -1,45 +1,55 @@
-/* Q79 (2D Arrays)
-Perform diagonal traversal of a matrix. */
-
 #include <stdio.h>
+
+void swap(int *a,int *b){
+
+    int t = *a;
+    *a = *b;
+    *b = t;
+}
+
+void heapify(int arr[],int n,int i){
+
+    int largest = i;
+
+    int left = 2*i+1;
+    int right = 2*i+2;
+
+    if(left<n && arr[left] > arr[largest])
+        largest = left;
+
+    if(right<n && arr[right] > arr[largest])
+        largest = right;
+
+    if(largest != i){
+
+        swap(&arr[i], &arr[largest]);
+
+        heapify(arr,n,largest);
+    }
+}
+
+void heapSort(int arr[],int n){
+
+    for(int i=n/2-1;i>=0;i--)
+        heapify(arr,n,i);
+
+    for(int i=n-1;i>=0;i--){
+
+        swap(&arr[0], &arr[i]);
+
+        heapify(arr,i,0);
+    }
+}
 
 int main(){
 
-int i, j;
-    
-    printf("Enter Matrix type (i j): \n");
-    scanf("%d %d", &i, &j);
-    int mat[i][j];
-    printf("Enter matrix elements: \n");
-    for (int a = 0; a < i; a++) {
-        for (int b = 0; b < j; b++) {
-            scanf("%d", &mat[a][b]);
-        }
-    }
+    int arr[] = {12,11,13,5,6,7};
 
-    int totalDiagonals = i + j - 1;
+    int n = 6;
 
-    for (int d = 0; d < totalDiagonals; d++) {
-        int temp[i + j], k = 0;
+    heapSort(arr,n);
 
-        for (int a = 0; a < i; a++) {
-            for (int b = 0; b < j; b++) {
-                if (a + b == d) {
-                    temp[k++] = mat[a][b];
-                }
-            }
-        }
+    for(int i=0;i<n;i++)
+        printf("%d ",arr[i]);
 
-        if (d % 2 == 0) {
-            for (int x = k - 1; x >= 0; x--) {
-                printf("%d ", temp[x]);
-            }
-        } else {
-            for (int x = 0; x < k; x++) {
-                printf("%d ", temp[x]);
-            }
-        }
-    }
-
-    return 0;
 }

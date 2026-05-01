@@ -1,56 +1,59 @@
-/* Q101 (Logic Enhancers)
-Write a Program to take a sorted array(say nums[]) and an integer (say target) as inputs. The elements in the sorted array might be repeated. You need to print the first and last occurrence of the target and print the index of first and last occurrence. Print -1, -1 if the target is not present */
-
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(){
-    // Making the sorted array
-    int len;
-    printf("Enter the length of array: \n");
-    scanf("%d", &len);
-    int nums[len];
-    for (int i = 0; i < len; i++){
-        printf("Enter element %d: \n", i+1);
-        scanf("%d", &nums[i]);
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+struct Node* create(int val) {
+    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+    temp->data = val;
+    temp->left = temp->right = NULL;
+    return temp;
+}
+
+struct Node* insert(struct Node* root, int val) {
+    if (root == NULL) return create(val);
+    if (val < root->data)
+        root->left = insert(root->left, val);
+    else
+        root->right = insert(root->right, val);
+    return root;
+}
+
+struct Node* lca(struct Node* root, int n1, int n2) {
+    if (root == NULL) return NULL;
+
+    if (n1 < root->data && n2 < root->data)
+        return lca(root->left, n1, n2);
+
+    if (n1 > root->data && n2 > root->data)
+        return lca(root->right, n1, n2);
+
+    return root;
+}
+
+int main() {
+    int n, i, val, n1, n2;
+    struct Node* root = NULL;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    printf("Enter %d values: ", n);
+    for (i = 0; i < n; i++) {
+        scanf("%d", &val);
+        root = insert(root, val);
     }
 
-    for (int i = 0; i < len; i++){
-        for (int j = 0; j < len - 1; j++){
-            if (nums[j] > nums[j+1]){
-                int temp = nums[j];
-                nums[j] = nums[j+1];
-                nums[j+1] = temp;
-            }
-        }
-    }
-    printf("Your array is: \n");
-    for (int i = 0; i<len; i++){
-        printf("%d ", nums[i]);
-    }
-    printf("\n");
+    printf("Enter two node values: ");
+    scanf("%d %d", &n1, &n2);
 
-    // Getting the target
-    printf("Enter your target: \n");
-    int target;
-    scanf("%d", &target);
+    struct Node* ans = lca(root, n1, n2);
 
-    // Finding the target
-    int first = -1,last = -1;
-    for (int i = 0; i < len; i++){
-            if (nums[i] == target){
-                if (first == -1){
-                    first = i;
-            }
-                last = i;
-        }
-            else{
-                continue;
-            }
-        }
-    if (first != -1 && last != -1){
-        printf("The first and last occurance of %d are indexes %d and %d respectively.", target,first,last);
-    }
-    else if (first == -1 && last == -1){
-        printf("The target is not present in the array. -1 -1");
-    }
+    printf("LCA: %d", ans->data);
+
+    return 0;
 }

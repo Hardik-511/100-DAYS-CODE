@@ -1,25 +1,57 @@
-/* Q95 (Strings)
-Check if one string is a rotation of another. */
-
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 
-int main(){
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
 
-    char str1[100], str2[100];
-    printf("Enter string 1: \n");
-    scanf("%s", str1);
-    printf("Enter string 2: \n");
-    scanf("%s", str2);
+struct Node* createNode(int value) {
+    struct Node* n = (struct Node*)malloc(sizeof(struct Node));
+    n->data = value;
+    n->left = NULL;
+    n->right = NULL;
+    return n;
+}
 
-    char temp[200];
-    strcpy(temp,str1);
-    strcat(temp,str1);
+int countLeaf(struct Node* root) {
+    if (root == NULL)
+        return 0;
 
-    if (strstr(temp,str2)){
-        printf("Rotation");
+    if (root->left == NULL && root->right == NULL)
+        return 1;
+
+    return countLeaf(root->left) + countLeaf(root->right);
+}
+
+int main() {
+    int n;
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    struct Node* nodes[n];
+
+    for (int i = 0; i < n; i++) {
+        int val;
+        printf("Enter value of node %d: ", i);
+        scanf("%d", &val);
+        nodes[i] = createNode(val);
     }
-    else{
-        printf("Not Rotation");
+
+    for (int i = 0; i < n; i++) {
+        int l, r;
+        printf("Enter left and right index of node %d (-1 if none): ", i);
+        scanf("%d %d", &l, &r);
+
+        if (l != -1)
+            nodes[i]->left = nodes[l];
+        if (r != -1)
+            nodes[i]->right = nodes[r];
     }
+
+    int ans = countLeaf(nodes[0]);
+    printf("Leaf nodes = %d\n", ans);
+
+    return 0;
 }

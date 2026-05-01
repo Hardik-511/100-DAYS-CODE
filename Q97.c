@@ -1,27 +1,56 @@
-/* Q97 (Strings)
-Print the initials of a name. */
-
 #include <stdio.h>
-#include <ctype.h>
-#include <string.h>
+#include <stdlib.h>
 
-int main(){
-char str[100];
-    printf("Enter any string: \n");
-    fgets(str,sizeof(str),stdin);
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
 
-    int len = strlen(str);
-    if (str[len-1] == '\n'){
-        str[len-1] = '\0';
+struct Node* createNode(int val) {
+    struct Node* n = (struct Node*)malloc(sizeof(struct Node));
+    n->data = val;
+    n->left = NULL;
+    n->right = NULL;
+    return n;
+}
+
+struct Node* insert(struct Node* root, int val) {
+    if (root == NULL)
+        return createNode(val);
+
+    if (val < root->data)
+        root->left = insert(root->left, val);
+    else
+        root->right = insert(root->right, val);
+
+    return root;
+}
+
+void inorder(struct Node* root) {
+    if (root == NULL)
+        return;
+
+    inorder(root->left);
+    printf("%d ", root->data);
+    inorder(root->right);
+}
+
+int main() {
+    int n, val;
+    struct Node* root = NULL;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter value: ");
+        scanf("%d", &val);
+        root = insert(root, val);
     }
 
-    if (isalpha(str[0])){
-        printf("%c.", toupper(str[0]));
-    }
+    printf("Inorder traversal: ");
+    inorder(root);
 
-    for (int i = 1; str[i] != '\0'; i++){
-        if (str[i] == ' ' && isalpha(str[i+1])){
-            printf("%c.", toupper(str[i+1]));
-        }
-    }
+    return 0;
 }

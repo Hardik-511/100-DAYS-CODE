@@ -1,18 +1,41 @@
-/*Q31 (Loops without Arrays/Strings)
-Write a program to take a number as input and print its equivalent binary representation. */
-
 #include <stdio.h>
 
-int main(){
-    int num, binary= 0, place=1;
-    printf("Enter a number: \n");
-    scanf("%d", &num);
+int main() {
+    int n;
 
-    while (num>0) {
-        binary = binary + (num % 2) * place;
-        num = num / 2;
-        place = place * 10;
+    printf("Enter size of array: ");
+    scanf("%d", &n);
+
+    int arr[n];
+    int visited[n];
+
+    for (int i = 0; i < n; i++) {
+        visited[i] = 0;
     }
-    printf("The binary representation is: %d", binary);
+
+    printf("Enter %d elements:\n", n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    printf("Frequencies:\n");
+
+    for (int i = 0; i < n; i++) {
+
+        if (visited[i] == 1)
+            continue;
+
+        int count = 1;
+
+        for (int j = i + 1; j < n; j++) {
+            if (arr[i] == arr[j]) {
+                count++;
+                visited[j] = 1;
+            }
+        }
+
+        printf("%d:%d ", arr[i], count);
+    }
+
     return 0;
 }

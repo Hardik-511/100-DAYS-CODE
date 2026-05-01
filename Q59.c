@@ -1,26 +1,52 @@
-/*Q59 (Arrays (1D))
-Count even and odd numbers in an array. */
-
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(){
-    int len;
-    printf("Enter the length of array: \n");
-    scanf("%d", &len);
-    int arr[len];
-    for (int i=0; i<len; i++){
-        printf("Enter element %d: ", i+1);
-        scanf("%d", &arr[i]);
-    }
+struct Node {
+    int coeff;
+    int exp;
+    struct Node* next;
+};
 
-    int even=0,odd=0;
-    for (int i=0; i < len;i++){
-        if (arr[i] % 2 == 0){
-            even+=1;
+int main() {
+    int n;
+    printf("Enter number of terms: ");
+    scanf("%d", &n);
+
+    struct Node *head = NULL, *temp = NULL, *newNode;
+
+    for (int i = 0; i < n; i++) {
+        newNode = (struct Node*)malloc(sizeof(struct Node));
+
+        printf("Enter coefficient and exponent: ");
+        scanf("%d %d", &newNode->coeff, &newNode->exp);
+
+        newNode->next = NULL;
+
+        if (head == NULL) {
+            head = newNode;
+            temp = newNode;
+        } else {
+            temp->next = newNode;
+            temp = newNode;
         }
-        else {odd+=1;}
     }
 
-    printf("Even: %d\n", even);
-    printf("Odd: %d",odd);
+    printf("Polynomial: ");
+
+    temp = head;
+    while (temp != NULL) {
+        if (temp->exp == 0)
+            printf("%d", temp->coeff);
+        else if (temp->exp == 1)
+            printf("%dx", temp->coeff);
+        else
+            printf("%dx^%d", temp->coeff, temp->exp);
+
+        if (temp->next != NULL)
+            printf(" + ");
+
+        temp = temp->next;
+    }
+
+    return 0;
 }

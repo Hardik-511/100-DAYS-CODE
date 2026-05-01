@@ -1,38 +1,79 @@
-/* Q67 (Arrays (1D))
-Insert an element in an array at a given position. */
-
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
-int main(){
-    
-    // Making the array
-    int len;
-    printf("Enter the length of array: \n");
-    scanf("%d", &len);
-    int arr[len+1];
-    printf("Enter %d elements:\n", len);
-    for (int i = 0; i < len; i++) {
-        scanf("%d", &arr[i]);
-    }
+struct Node {
+    int data;
+    struct Node* next;
+};
 
-    // New element with Position
-    int pos,new;
-    printf("Enter the position of the new element along with the element (Space Seperated): \n");
-    scanf("%d %d", &pos, &new);
+struct Node* top = NULL;
 
-    // Shifting elements
-    for (int i = len; i > pos; i--) {
-        arr[i] = arr[i - 1];
-        
-    }
-
-    // Inserting the new element
-    arr[pos] = new;
-    pos = pos - 1;
-
-    for (int i = 0; i < len+1; i++) {
-    printf("%d ", arr[i]);
+void push(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = top;
+    top = newNode;
 }
 
+int pop() {
+    if (top == NULL) {
+        printf("Stack Underflow\n");
+        return -1;
+    }
 
+    struct Node* temp = top;
+    int value = temp->data;
+    top = top->next;
+    free(temp);
+
+    return value;
+}
+
+int evaluatePostfix(char exp[]) {
+    char *token = strtok(exp, " ");
+
+    while (token != NULL) {
+
+        if (isdigit(token[0])) {
+            push(atoi(token));
+        }
+        else {
+            int b = pop();
+            int a = pop();
+            int result;
+
+            switch (token[0]) {
+                case '+': result = a + b; break;
+                case '-': result = a - b; break;
+                case '*': result = a * b; break;
+                case '/': result = a / b; break;
+                default:
+                    printf("Invalid operator\n");
+                    return -1;
+            }
+
+            push(result);
+        }
+
+        token = strtok(NULL, " ");
+    }
+
+    return pop();
+}
+
+int main() {
+    char exp[100];
+
+    printf("Enter postfix expression: ");
+    fgets(exp, sizeof(exp), stdin);
+
+    exp[strcspn(exp, "\n")] = 0;
+
+    int result = evaluatePostfix(exp);
+
+    printf("Result = %d\n", result);
+
+    return 0;
 }

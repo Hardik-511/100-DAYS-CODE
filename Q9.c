@@ -1,23 +1,51 @@
-/* Q9 (User Inputs, Operations & Output)
-Write a program to calculate simple and compound interest for given principal, rate, and time. */
-
 #include <stdio.h>
-#include <math.h>
-int main(){
-    float principal, rate, time, simple_interest, compound_interest,final_amount;
-    printf("Enter principal amount: ");
-    scanf("%f", &principal);    
-    printf("Enter rate of interest: ");
-    scanf("%f", &rate); 
-    printf("Enter time: ");
-    scanf("%f", &time);
 
-    simple_interest = (principal * rate * time) / 100;
-    final_amount = principal * pow((1 + rate / 100), time);
-    compound_interest = final_amount - principal;
+int main() {
+    int p, q;
 
-    printf("Simple Interest: %.2f\n", simple_interest);
-    printf("Compound Interest: %.2f\n", compound_interest);
+    printf("Enter number of entries in server log 1:\n");
+    scanf("%d", &p);
+
+    int A[p];
+
+    printf("Enter arrival times for server log 1:\n");
+    for (int i = 0; i < p; i++) {
+        scanf("%d", &A[i]);
+    }
+
+    printf("Enter number of entries in server log 2:\n");
+    scanf("%d", &q);
+
+    int B[q];
+
+    printf("Enter arrival times for server log 2:\n");
+    for (int i = 0; i < q; i++) {
+        scanf("%d", &B[i]);
+    }
+
+    int i = 0, j = 0;
+
+    printf("Merged arrival log:\n");
+
+    while (i < p && j < q) {
+        if (A[i] <= B[j]) {
+            printf("%d ", A[i]);
+            i++;
+        } else {
+            printf("%d ", B[j]);
+            j++;
+        }
+    }
+
+    while (i < p) {
+        printf("%d ", A[i]);
+        i++;
+    }
+
+    while (j < q) {
+        printf("%d ", B[j]);
+        j++;
+    }
+
     return 0;
 }
-

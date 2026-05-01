@@ -1,15 +1,35 @@
-/* Q27 (Loops without Arrays/Strings)
-Write a program to print the sum of the first n odd numbers. */
-
 #include <stdio.h>
 
-int main(){
-    int n, var = 1, requiredsum = 0;
-    printf("Enter the value of n: \n");
+int main() {
+    int n;
+    
+    printf("Enter size of matrix: ");
     scanf("%d", &n);
-    for (var=1; var <=n; var++){
-        requiredsum = requiredsum + (2*var - 1);
+
+    int matrix[n][n];
+
+    printf("Enter matrix elements:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &matrix[i][j]);
+        }
     }
-    printf("The sum of first %d odd numbers is: %d\n", n, requiredsum);
+
+    int isIdentity = 1;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i == j && matrix[i][j] != 1)
+                isIdentity = 0;
+            if (i != j && matrix[i][j] != 0)
+                isIdentity = 0;
+        }
+    }
+
+    if (isIdentity)
+        printf("Identity Matrix");
+    else
+        printf("Not an Identity Matrix");
+
     return 0;
 }

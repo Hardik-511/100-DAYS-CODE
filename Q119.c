@@ -1,41 +1,30 @@
-/* Q119 (Logic Enhancers)
-Write a program to take an integer array as input. Only one element will be repeated. Print the repeated element. Try to find the result in one single iteration. */
-
 #include <stdio.h>
 
-int main(){
-  int len;
-  printf("Enter length of the array: \n");
-  scanf("%d", &len);
-  int nums[len];
-
-  for (int i = 0; i < len; i++){
-    printf("Enter element number %d: \n", i + 1);
-    scanf("%d", &nums[i]);
-  }
-
-  for (int i = 0; i < len - 1; i++){
-    for (int j = 0; j < len - 1; j++){
-      if (nums[j] > nums[j+1]){
-        int temp = nums[j];
-        nums[j] = nums[j+1];
-        nums[j+1] = temp;
-      }
+int isMinHeap(int arr[], int n) {
+    for (int i = 0; i <= (n - 2) / 2; i++) {
+        if (2 * i + 1 < n && arr[i] > arr[2 * i + 1])
+            return 0;
+        if (2 * i + 2 < n && arr[i] > arr[2 * i + 2])
+            return 0;
     }
-  }
+    return 1;
+}
 
-  int repeating = -1;
-  for (int i = 0; i < len; i++){
-    if (nums[i] == nums[i+1]){
-      repeating = nums[i];
-      break;
+int main() {
+    int n;
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    int arr[n];
+    printf("Enter level order traversal: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
     }
-  }
 
-  if (repeating != -1){
-    printf("The repeating element is: %d", repeating);
-  }
-  else if (repeating == -1){
-    printf("No repeating element");
-  }
+    if (isMinHeap(arr, n))
+        printf("YES\n");
+    else
+        printf("NO\n");
+
+    return 0;
 }

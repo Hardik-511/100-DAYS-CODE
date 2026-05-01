@@ -1,60 +1,67 @@
-/*Q65 (Arrays (1D))
-Search in a sorted array using binary search. */
-
 #include <stdio.h>
+#include <ctype.h>
 
-int main(){
-    int len;
+char stack[100];
+int top = -1;
 
-    printf("Enter the length of the array: \n");
-    scanf("%d", &len);
-    int arr[len];
-    for (int i = 0; i<len; i++){
-        printf("Enter element %d: ", i+1);
-        scanf("%d", &arr[i]);
-    }
-    for (int pass = 0; pass < len - 1; pass++) {
-    for (int i = 0; i < len - pass - 1; i++) {
-        if (arr[i] > arr[i + 1]) {
-            int temp = arr[i];
-            arr[i] = arr[i + 1];
-            arr[i + 1] = temp;
-        }
-    }
+void push(char x)
+{
+    stack[++top] = x;
 }
-    printf("Sorted Array: \n");
-    for (int i =0; i<len; i++){
-        printf("%d ", arr[i]);
-    }
-    printf("\n");
 
-    int key;
-    printf("Enter the element to search: ");
-    scanf("%d", &key);
+char pop()
+{
+    return stack[top--];
+}
 
-    int low = 0, high = len - 1, mid;
-    int found = 0;
+int precedence(char op)
+{
+    if(op == '+' || op == '-') return 1;
+    if(op == '*' || op == '/') return 2;
+    return 0;
+}
 
-    while (low <= high) {
-        mid = (low + high) / 2;
+int main()
+{
+    char infix[100], postfix[100];
+    int i = 0, j = 0;
 
-        if (arr[mid] == key) {
-            printf("Element found at index %d\n", mid);
-            found = 1;
-            break;
+    scanf("%s", infix);
+
+    while(infix[i] != '\0')
+    {
+        char ch = infix[i];
+
+        if(isalnum(ch))
+        {
+            postfix[j++] = ch;
         }
-        else if (arr[mid] < key) {
-            low = mid + 1;
+        else if(ch == '(')
+        {
+            push(ch);
         }
-        else {
-            high = mid - 1;
+        else if(ch == ')')
+        {
+            while(stack[top] != '(')
+                postfix[j++] = pop();
+            pop();
         }
+        else
+        {
+            while(top != -1 && precedence(stack[top]) >= precedence(ch))
+                postfix[j++] = pop();
+            push(ch);
+        }
+
+        i++;
     }
 
-    if (!found) {
-        printf("Element %d not found in the array.\n", key);
-    }
+    while(top != -1)
+        postfix[j++] = pop();
+
+    postfix[j] = '\0';
+
+    printf("%s", postfix);
 
     return 0;
-
 }

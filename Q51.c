@@ -1,24 +1,50 @@
-/*Q51 (Nested Loops without Arrays/Strings)
-Write a program to print the following pattern:
-    5
-   45
-  345
- 2345
-12345
-*/
-
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(){
-    int n=5;
-    for (int i=5; i>=1; i--){
-        for (int j=1; j<i; j++){
-            printf(" ");  
-        }
-        for (int j = i; j <= n; j++) {
-            printf("%d", j);
-        }
-        printf("\n");
+struct Node {
+    int data;
+    struct Node* prev;
+    struct Node* next;
+};
+
+struct Node* insertEnd(struct Node* head, int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->prev = NULL;
+    newNode->next = NULL;
+
+    if (head == NULL)
+        return newNode;
+
+    struct Node* temp = head;
+    while (temp->next != NULL)
+        temp = temp->next;
+
+    temp->next = newNode;
+    newNode->prev = temp;
+
+    return head;
+}
+
+void display(struct Node* head) {
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
     }
-    return 0;
+}
+
+int main() {
+    int n, val;
+    struct Node* head = NULL;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &val);
+        head = insertEnd(head, val);
+    }
+
+    display(head);
 }

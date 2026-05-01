@@ -1,17 +1,22 @@
-/* Q14 (Conditional Statements)
-Write a program to input a character and check whether it is a vowel or consonant using if–else.  */
-
 #include <stdio.h>
 
-int main(){
-    char alphabet;
-    printf("Enter a character: ");
-    scanf(" %c", &alphabet);
-    if (alphabet == 'a' || alphabet == 'e' || alphabet == 'i' || alphabet == 'o' || alphabet == 'u' ||
-        alphabet == 'A' || alphabet == 'E' || alphabet == 'I' || alphabet == 'O' || alphabet == 'U') {
-        printf("%c is a vowel.\n", alphabet);
-    } else {
-        printf("%c is a consonant.\n", alphabet);
+int fib(int n) {
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+
+    int a = 0, b = 1, c;
+    for (int i = 2; i <= n; i++) {
+        c = a + b;
+        a = b;
+        b = c;
     }
+    return b;
+}
+
+int main() {
+    int n;
+    printf("Enter the value of n: \n");
+    scanf("%d", &n);
+    printf("%d", fib(n));
     return 0;
 }

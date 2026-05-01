@@ -1,42 +1,91 @@
-/* Q107 (Logic Enhancers)
-Write a program to take an array arr[] of integers as input, the task is to find the previous greater element for each element of the array in order of their appearance in the array. Previous greater element of an element in the array is the nearest element on the left which is greater than the current element. If there does not exist next greater of current element, then previous greater element for current element is -1.
-
-N.B:
-- Print the output for each element in a comma separated fashion.
-- Do not use Stack, use brute force approach (nested loop) to solve. */
-
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(){
-  // Making the array
-  int len;
-  printf("Enter the length of array: \n");
-  scanf("%d", &len);
-  int nums[len], greaternums[len];
-  for (int i = 0; i < len; i++){
-    printf("Enter element %d: \n", i+1);
-    scanf("%d", &nums[i]);
-  }
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
 
-   for (int i = 0; i < len; i++){
-    int found = 0;
-    for (int j = i-1; j >= 0; j--){
-    if (nums[j] > nums[i]){
-      greaternums[i] = nums[j];
-      found = 1;
-      break;
-      }
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+struct Node* buildTree(int arr[], int n) {
+    if (n == 0) return NULL;
+
+    struct Node* nodes[n];
+
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == -1)
+            nodes[i] = NULL;
+        else
+            nodes[i] = createNode(arr[i]);
     }
-    if (!found){
-      greaternums[i] = -1;
+
+    for (int i = 0, j = 1; j < n; i++) {
+        if (nodes[i] != NULL) {
+            if (j < n) nodes[i]->left = nodes[j++];
+            if (j < n) nodes[i]->right = nodes[j++];
+        }
     }
-  }
-  for (int i = 0; i<len; i++){
-    if (i == len - 1){
-      printf("%d", greaternums[i]);
+
+    return nodes[0];
+}
+
+void zigzagTraversal(struct Node* root) {
+    if (!root) return;
+
+    struct Node* queue[100];
+    int front = 0, rear = 0;
+
+    queue[rear++] = root;
+    int leftToRight = 1;
+
+    while (front < rear) {
+        int size = rear - front;
+        int temp[100];
+
+        for (int i = 0; i < size; i++) {
+            struct Node* curr = queue[front++];
+            temp[i] = curr->data;
+
+            if (curr->left) queue[rear++] = curr->left;
+            if (curr->right) queue[rear++] = curr->right;
+        }
+
+        if (leftToRight) {
+            for (int i = 0; i < size; i++)
+                printf("%d ", temp[i]);
+        } else {
+            for (int i = size - 1; i >= 0; i--)
+                printf("%d ", temp[i]);
+        }
+
+        leftToRight = !leftToRight;
     }
-    else{
-    printf("%d, ", greaternums[i]);
+}
+
+int main() {
+    int n;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    int arr[n];
+
+    printf("Enter level order traversal (-1 for NULL):\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
     }
-  }
+
+    struct Node* root = buildTree(arr, n);
+
+    printf("Zigzag Traversal: ");
+    zigzagTraversal(root);
+
+    return 0;
 }

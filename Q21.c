@@ -1,51 +1,38 @@
-/*Q21 (Conditional Statements)
-Write a program to display the month name and number of days using switch-case for a given month number. */
-
 #include <stdio.h>
 
-int main(){
-    int month;
-    printf("Enter a month number: ");
-    scanf("%d", &month);
-    switch(month){
-        case 1:
-            printf("January, 31 days\n");
-            break;
-        case 2:
-            printf("February, 28 days\n");
-            break;
-        case 3:
-            printf("March, 31 days\n");
-            break;
-        case 4:
-            printf("April, 30 days\n");
-            break;
-        case 5:
-            printf("May, 31 days\n");
-            break;
-        case 6:
-            printf("June, 30 days\n");
-            break;
-        case 7:
-            printf("July, 31 days\n");
-            break;
-        case 8:
-            printf("August, 31 days\n");
-            break;
-        case 9:
-            printf("September, 30 days\n");
-            break;
-        case 10:
-            printf("October, 31 days\n");
-            break;
-        case 11:
-            printf("November, 30 days\n");
-            break;
-        case 12:
-            printf("December, 31 days\n");
-            break;
-        default:
-            printf("Invalid Input.\n");
+int main() {
+    int m, n;
+    printf("Enter matrix size: \n");
+    scanf("%d %d", &m, &n);
+
+    int A[m][n], B[m][n], sum[m][n];
+
+    printf("Enter elements for Matrix 1: \n");
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &A[i][j]);
+        }
     }
+
+    printf("Enter elements for Matrix 2: \n");
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &B[i][j]);
+        }
+    }
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            sum[i][j] = A[i][j] + B[i][j];
+        }
+    }
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%d ", sum[i][j]);
+        }
+        printf("\n");
+    }
+
     return 0;
 }

@@ -1,46 +1,109 @@
-/* Q105 (Logic Enhancers)
-Write a program to take an integer array nums of size n, and print the majority element. The majority element is the element that appears strictly more than ⌊n / 2⌋ times. Print -1 if no such element exists. Note: Majority Element is not necessarily the element that is present most number of times. */
-
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(){
-  // Making the array
-  int len;
-  printf("Enter the length of array: \n");
-  scanf("%d", &len);
-  int nums[len];
-  for (int i = 0; i < len; i++){
-    printf("Enter element %d: \n", i+1);
-    scanf("%d", &nums[i]);
-  }
+#define MAX 1000
 
-  int try = 0;
-  int count = 0;
-  for (int i = 0; i<len; i++){
-    if (count == 0){
-      try = nums[i];
-      count+=1;
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+struct QNode {
+    struct Node* node;
+    int hd;
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+struct Node* buildTree(int arr[], int n) {
+    if (n == 0 || arr[0] == -1) return NULL;
+
+    struct Node* root = createNode(arr[0]);
+    struct Node* queue[MAX];
+    int front = 0, rear = 0;
+
+    queue[rear++] = root;
+
+    int i = 1;
+    while (i < n) {
+        struct Node* curr = queue[front++];
+
+        if (arr[i] != -1) {
+            curr->left = createNode(arr[i]);
+            queue[rear++] = curr->left;
+        }
+        i++;
+
+        if (i < n && arr[i] != -1) {
+            curr->right = createNode(arr[i]);
+            queue[rear++] = curr->right;
+        }
+        i++;
     }
-    else if (nums[i] == try){
-      count++;
+
+    return root;
+}
+
+void verticalOrder(struct Node* root) {
+    if (!root) return;
+
+    struct QNode queue[MAX];
+    int front = 0, rear = 0;
+
+    int map[MAX][MAX];
+    int count[MAX] = {0};
+
+    int offset = MAX / 2;
+
+    queue[rear++] = (struct QNode){root, 0};
+
+    while (front < rear) {
+        struct QNode temp = queue[front++];
+        struct Node* curr = temp.node;
+        int hd = temp.hd + offset;
+
+        map[hd][count[hd]++] = curr->data;
+
+        if (curr->left)
+            queue[rear++] = (struct QNode){curr->left, temp.hd - 1};
+
+        if (curr->right)
+            queue[rear++] = (struct QNode){curr->right, temp.hd + 1};
     }
-    else{
-      count--;
+
+    printf("\nVertical Order Traversal:\n");
+
+    for (int i = 0; i < MAX; i++) {
+        if (count[i] > 0) {
+            printf("Column: ");
+            for (int j = 0; j < count[i]; j++) {
+                printf("%d ", map[i][j]);
+            }
+            printf("\n");
+        }
     }
-  }
+}
 
-  count = 0;
-  for (int i = 0; i < len; i++){
-      if (nums[i] == try){
-        count++;
-      }
-  }
+int main() {
+    int n;
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
 
-  if (count > len/2){
-    printf("Majority Element is: %d",try);
-  }
-  else{
-    printf("No element in Majority. -1");
-  }
+    int arr[n];
+    printf("Enter level order traversal (-1 for NULL): ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
 
+    struct Node* root = buildTree(arr, n);
+
+    verticalOrder(root);
+
+    return 0;
 }

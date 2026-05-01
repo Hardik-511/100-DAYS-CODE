@@ -1,30 +1,75 @@
-/* Q141 (Enum)
-Define a structure Student with name, roll_no, and marks, then read and print one student's data. */
-
 #include <stdio.h>
+#include <string.h>
 
-struct Student{
-  char name[50];
-  int roll_num;
-  int marks;
-};
+#define EMPTY -1
 
-int main(){
-  struct Student S;
+int table[1000];
 
-  printf("Enter your name: \n");
-  fgets(S.name, sizeof(S.name), stdin);
-  for (int i = 0; S.name[i] != '\0'; i++){
-    if (S.name[i] == '\n'){
-      S.name[i] = '\0';
+void init(int m) {
+    for (int i = 0; i < m; i++) {
+        table[i] = EMPTY;
     }
-  }
-  
-  printf("Enter your roll number: \n");
-  scanf("%d", &S.roll_num);
+}
 
-  printf("Enter your marks: \n");
-  scanf("%d", &S.marks);
+void insert(int key, int m) {
+    int h = key % m;
 
-  printf("Name: %s || Roll: %d || Marks: %d", S.name, S.roll_num, S.marks);
+    for (int i = 0; i < m; i++) {
+        int idx = (h + i * i) % m;
+
+        if (table[idx] == EMPTY) {
+            table[idx] = key;
+            return;
+        }
+    }
+}
+
+int search(int key, int m) {
+    int h = key % m;
+
+    for (int i = 0; i < m; i++) {
+        int idx = (h + i * i) % m;
+
+        if (table[idx] == EMPTY) {
+            return 0;
+        }
+
+        if (table[idx] == key) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int main() {
+    int m, q;
+
+    printf("Enter hash table size: ");
+    scanf("%d", &m);
+
+    printf("Enter number of operations: ");
+    scanf("%d", &q);
+
+    init(m);
+
+    printf("Enter operations (INSERT x / SEARCH x):\n");
+
+    while (q--) {
+        char op[10];
+        int key;
+
+        scanf("%s %d", op, &key);
+
+        if (strcmp(op, "INSERT") == 0) {
+            insert(key, m);
+        } 
+        else if (strcmp(op, "SEARCH") == 0) {
+            if (search(key, m))
+                printf("FOUND\n");
+            else
+                printf("NOT FOUND\n");
+        }
+    }
+
+    return 0;
 }

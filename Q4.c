@@ -1,17 +1,39 @@
-/* Q4 (User Inputs, Operations & Output)
-Write a program to calculate the area and circumference of a circle given its radius. */
-
 #include <stdio.h>
 
-int main(){
-    float PI = 3.14159;
-    int radius;
-    float area, circumference;
-    printf("Enter the radius of the circle: ");
-    scanf("%d", &radius);
-    area = PI * radius * radius;
-    circumference = 2 * PI * radius;
-    printf("Area of the circle: %.2f cm^2c\n", area);
-    printf("Circumference of the circle: %.2f cm\n", circumference);
+int maxProfit(int* prices, int pricesSize) {
+    int minPrice = prices[0];
+    int maxProfit = 0;
+
+    for (int i = 1; i < pricesSize; i++) {
+        if (prices[i] < minPrice) {
+            minPrice = prices[i];
+        } else if (prices[i] - minPrice > maxProfit) {
+            maxProfit = prices[i] - minPrice;
+        }
+    }
+
+    return maxProfit;
+}
+
+int main() {
+    int n;
+
+    printf("Enter number of days:\n");
+    scanf("%d", &n);
+
+    if (n <= 1) {
+        printf("0\n");
+        return 0;
+    }
+
+    int prices[n];
+    printf("Enter stock prices:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &prices[i]);
+    }
+
+    int profit = maxProfit(prices, n);
+    printf("Maximum Profit: %d\n", profit);
+
     return 0;
 }

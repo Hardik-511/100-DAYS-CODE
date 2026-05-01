@@ -1,42 +1,73 @@
-/* Q77 (2D Arrays)
-Check if the elements on the diagonal of a matrix are distinct. */
-
 #include <stdio.h>
 
-int main() {
-    int i, j;
-    printf("Enter Matrix type (i j): \n");
-    scanf("%d %d", &i, &j);
+#define MAX 100
 
-    if (i != j) {
-        printf("Diagonal elements only exist for n x n matrices. Retry!\n");
-        scanf("%d %d", &i, &j);
+int heap[MAX];
+int size = 0;
+
+void swap(int *a,int *b){
+    int t = *a;
+    *a = *b;
+    *b = t;
+}
+
+void insert(int x){
+
+    heap[size] = x;
+
+    int i = size;
+
+    size++;
+
+    while(i>0 && heap[(i-1)/2] > heap[i]){
+
+        swap(&heap[i], &heap[(i-1)/2]);
+
+        i = (i-1)/2;
     }
+}
 
-    int mat[i][j];
+int deleteMin(){
 
-    printf("Enter matrix elements: \n");
-    for (int a = 0; a < i; a++) {
-        for (int b = 0; b < j; b++) {
-            scanf("%d", &mat[a][b]);
-        }
-    }
+    if(size == 0)
+        return -1;
 
-    int distinct = 1;
-    for (int a = 0; a < i; a++) {
-        for (int b = 0; b < a; b++) {
-            if (mat[a][a] == mat[b][b]) {
-                distinct = 0;
-                break;
-            }
-        }
-        if (distinct == 0) 
+    int root = heap[0];
+
+    heap[0] = heap[size-1];
+
+    size--;
+
+    int i = 0;
+
+    while(2*i+1 < size){
+
+        int left = 2*i+1;
+        int right = 2*i+2;
+
+        int smallest = left;
+
+        if(right < size && heap[right] < heap[left])
+            smallest = right;
+
+        if(heap[i] <= heap[smallest])
             break;
+
+        swap(&heap[i], &heap[smallest]);
+
+        i = smallest;
     }
 
-    if (distinct) {
-        printf("Distinct!\n");
-    } else {
-        printf("Not Distinct..\n");
-    }
+    return root;
+}
+
+int main(){
+
+    insert(30);
+    insert(10);
+    insert(20);
+
+    printf("%d\n", deleteMin());
+    printf("%d\n", deleteMin());
+
 }
